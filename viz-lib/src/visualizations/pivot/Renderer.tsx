@@ -4,6 +4,12 @@ import { get, find, pick, map, mapValues } from "lodash";
 import PivotTableUI from "react-pivottable/PivotTableUI";
 import { RendererPropTypes } from "@/visualizations/prop-types";
 import { formatColumnValue } from "@/lib/utils";
+import TableRenderers from "react-pivottable/TableRenderers";
+import Plot from "react-plotly.js";
+import createPlotlyRenderers from "react-pivottable/PlotlyRenderers";
+
+// create Plotly renderers via dependency injection
+const PlotlyRenderers = createPlotlyRenderers(Plot);
 
 import "react-pivottable/pivottable.css";
 import "./renderer.less";
@@ -57,7 +63,12 @@ export default function Renderer({ data, options, onOptionsChange }: any) {
       data-hide-row-totals={hideRowTotals || null}
       data-hide-column-totals={hideColumnTotals || null}
       data-test="PivotTableVisualization">
-      <PivotTableUI {...pick(config, VALID_OPTIONS)} data={dataRows} onChange={onChange} />
+      <PivotTableUI {...pick(config, VALID_OPTIONS)}
+                    data={dataRows}
+                    onChange={onChange}
+                    renderers={Object.assign({}, TableRenderers, PlotlyRenderers)}
+                    plotlyOptions={{width: "100%", height: "100%"}}
+      />
     </div>
   );
 }
