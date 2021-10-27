@@ -8,6 +8,8 @@ x-redash-service: &redash-service
       skip_frontend_build: "true"
   volumes:
     - .:/app
+  extra_hosts:
+    - "cpt-xmhampton01.ingrnet.com:172.17.0.1"
 x-redash-environment: &redash-environment
   REDASH_LOG_LEVEL: "INFO"
   REDASH_REDIS_URL: "redis://redis:6379/0"
@@ -16,6 +18,7 @@ x-redash-environment: &redash-environment
   REDASH_MAIL_DEFAULT_SENDER: "redash@example.com"
   REDASH_MAIL_SERVER: "email"
   REDASH_ENFORCE_CSRF: "true"
+  REDASH_ENFORCE_PRIVATE_IP_BLOCK: "false"
 services:
   server:
     <<: *redash-service
@@ -58,6 +61,8 @@ services:
     restart: unless-stopped
     environment:
       POSTGRES_HOST_AUTH_METHOD: "trust"
+    volumes:
+      - "C:\\Users\\mhampton\\.redash\\postgres-data-dev:/var/lib/postgresql/data"
   email:
     image: djfarrelly/maildev
     ports:
